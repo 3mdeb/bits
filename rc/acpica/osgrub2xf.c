@@ -106,7 +106,7 @@ ACPI_PHYSICAL_ADDRESS
 AcpiOsGetRootPointer (
     void)
 {
-#if defined(GRUB_MACHINE_PCBIOS)
+#if defined(GRUB_MACHINE_PCBIOS) || defined(GRUB_MACHINE_COREBOOT)
     ACPI_PHYSICAL_ADDRESS TableAddress;
     if (AcpiFindRootPointer(&TableAddress) != AE_OK)
         return 0;
