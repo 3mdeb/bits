@@ -470,8 +470,9 @@ static PyObject *bits_get_width_height(PyObject *self, PyObject *args, PyObject 
 
     FOR_ACTIVE_TERM_OUTPUTS(term) {
         if (current == term_num) {
-            U16 temp = term->getwh(term);
-            return Py_BuildValue("BB", (temp >> 8) & 0xff, temp & 0xff);
+	    struct grub_term_coordinate dim;
+            dim = term->getwh(term);
+            return Py_BuildValue("BB", dim.x, dim.y);
         }
         current++;
     }
@@ -490,8 +491,9 @@ static PyObject *bits_get_xy(PyObject *self, PyObject *args, PyObject *keywds)
 
     FOR_ACTIVE_TERM_OUTPUTS(term) {
         if (current == term_num) {
-            U16 temp = term->getxy(term);
-            return Py_BuildValue("BB", (temp >> 8) & 0xff, temp & 0xff);
+	    struct grub_term_coordinate pos;
+            pos = term->getxy(term);
+            return Py_BuildValue("BB", pos.x, pos.y);
         }
         current++;
     }
@@ -513,7 +515,8 @@ static PyObject *bits_goto_xy(PyObject *self, PyObject *args, PyObject *keywds)
 
     FOR_ACTIVE_TERM_OUTPUTS(term) {
         if (current == term_num) {
-            term->gotoxy(term, x, y);
+	    struct grub_term_coordinate pos = { .x = x, .y = y };
+            term->gotoxy(term, pos);
             return Py_BuildValue("");
         }
         current++;
