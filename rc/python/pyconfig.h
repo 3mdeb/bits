@@ -156,7 +156,7 @@ size_t fwrite(const void *ptr, size_t size, size_t nmemb, FILE *stream);
 char *getenv(const char *name);
 int isatty(int fd);
 int is_directory(const char *filename);
-void iterate_directory(const char *dirname, int (*callback)(const char *filename, const struct grub_dirhook_info *info));
+void iterate_directory(const char *dirname, int (*callback)(const char *filename, const struct grub_dirhook_info *info, void *hook_data), void *data);
 struct lconv *localeconv(void);
 off_t lseek(int fd, off_t offset, int whence);
 
@@ -188,6 +188,8 @@ int vsnprintf(char *str, size_t size, const char *format, va_list ap);
 
 #if defined(GRUB_MACHINE_PCBIOS)
 #define PLATFORM "BITS"
+#elif defined(GRUB_MACHINE_COREBOOT)
+#define PLATFORM "BITS-coreboot"
 #elif defined(GRUB_MACHINE_EFI)
 #define PLATFORM "BITS-EFI"
 #endif

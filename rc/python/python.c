@@ -87,12 +87,12 @@ static grub_err_t grub_cmd_python(grub_command_t cmd, int argc, char **args)
     return GRUB_ERR_NONE;
 }
 
-static int pydisk_iterate(int (*hook)(const char *name), grub_disk_pull_t pull)
+static int pydisk_iterate(int (*hook)(const char *name, void *hook_data), void *data, grub_disk_pull_t pull)
 {
     if (pull != GRUB_DISK_PULL_NONE)
         return 0;
 
-    if (hook("python"))
+    if (hook("python", data))
         return 1;
     return 0;
 }
@@ -148,12 +148,13 @@ static struct grub_disk_dev pydisk = {
 };
 
 static grub_err_t pyfs_dir(grub_device_t device, const char *path,
-                           int (*hook)(const char *filename, const struct grub_dirhook_info *info))
+                           int (*hook)(const char *filename, const struct grub_dirhook_info *info, void *hook_data),
+                           void *data)
 {
     if (device->disk->dev->id != PYDISK_ID)
         return grub_error(GRUB_ERR_BAD_FS, "not a python disk");
 
-    return do_pyfs_dir(path, hook);
+    return do_pyfs_dir(path, hook, data);
 }
 
 static grub_err_t pyfs_open(struct grub_file *file, const char *name)

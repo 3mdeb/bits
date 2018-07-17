@@ -37,7 +37,7 @@ static PyObject *pyfs_dir_callable;
 static PyObject *pyfs_open_callable;
 static PyObject *pyfs_read_callable;
 
-grub_err_t do_pyfs_dir(const char *path, int (*hook)(const char *filename, const struct grub_dirhook_info *info))
+grub_err_t do_pyfs_dir(const char *path, int (*hook)(const char *filename, const struct grub_dirhook_info *info, void *hook_data), void *data)
 {
     PyObject *pyret;
     PyObject *iterator;
@@ -76,7 +76,7 @@ grub_err_t do_pyfs_dir(const char *path, int (*hook)(const char *filename, const
             struct grub_dirhook_info info = {
                 .dir = PyObject_IsTrue(pyisdir)
             };
-            if (hook(pyname, &info))
+            if (hook(pyname, &info, data))
                 break;
         }
         Py_DECREF(item);

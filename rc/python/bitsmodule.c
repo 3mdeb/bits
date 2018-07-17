@@ -43,7 +43,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 static PyObject *pyblocklist = NULL;
 static grub_disk_addr_t partition_start_sector = 0;
 
-static void NESTED_FUNC_ATTR disk_blocks_read_hook(grub_disk_addr_t sector, unsigned offset, unsigned length)
+static void disk_blocks_read_hook(grub_disk_addr_t sector, unsigned offset, unsigned length, void *data)
 {
     PyObject *tuple;
     if (!pyblocklist)
@@ -181,7 +181,7 @@ static PyObject *bits__getenvdict(PyObject *self, PyObject *args)
 
 static PyObject *listdir_result;
 
-static int listdir_callback(const char *filename, const struct grub_dirhook_info *info)
+static int listdir_callback(const char *filename, const struct grub_dirhook_info *info, void *data)
 {
     PyObject *path;
     if (strcmp(filename, ".") == 0 || strcmp(filename, "..") == 0)
@@ -202,7 +202,7 @@ static PyObject *bits__listdir(PyObject *self, PyObject *args)
         return os_error_with_filename(ENOTDIR, path);
 
     listdir_result = PyList_New(0);
-    iterate_directory(path, listdir_callback);
+    iterate_directory(path, listdir_callback, NULL);
     result = listdir_result;
     listdir_result = NULL;
     return result;

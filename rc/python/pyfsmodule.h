@@ -35,7 +35,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <grub/types.h>
 
 PyMODINIT_FUNC init_pyfs(void);
-grub_err_t do_pyfs_dir(const char *path, int (*hook)(const char *filename, const struct grub_dirhook_info *info));
+grub_err_t do_pyfs_dir(const char *path, int (*hook)(const char *filename, const struct grub_dirhook_info *info, void *hook_data), void*data);
 grub_err_t do_pyfs_open(const char *name, grub_off_t *size);
 grub_ssize_t do_pyfs_read(const char *name, grub_off_t offset, void *buf, grub_size_t len);
 

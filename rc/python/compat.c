@@ -344,7 +344,8 @@ int isatty(int fd)
     return fd >= 0 && fd < 3;
 }
 
-void iterate_directory(const char *dirname, int (*callback)(const char *filename, const struct grub_dirhook_info *info))
+void iterate_directory(const char *dirname, int (*callback)(const char *filename, const struct grub_dirhook_info *info, void *hook_data),
+			void *data)
 {
     char *device_name;
     grub_device_t device;
@@ -354,7 +355,7 @@ void iterate_directory(const char *dirname, int (*callback)(const char *filename
     if (device) {
         grub_fs_t fs = grub_fs_probe(device);
         if (fs)
-            fs->dir(device, dirname, callback);
+            fs->dir(device, dirname, callback, data);
         grub_device_close(device);
     }
     grub_free(device_name);
@@ -363,7 +364,7 @@ void iterate_directory(const char *dirname, int (*callback)(const char *filename
 static const char *is_directory_filename;
 static int is_directory_result;
 
-static int is_directory_callback(const char *filename, const struct grub_dirhook_info *info)
+static int is_directory_callback(const char *filename, const struct grub_dirhook_info *info, void *data)
 {
     if ((info->case_insensitive ? grub_strcasecmp : grub_strcmp)(is_directory_filename, filename) == 0) {
         is_directory_result = !!info->dir;
@@ -399,7 +400,7 @@ int is_directory(const char *filename)
 
     is_directory_filename = basename;
     is_directory_result = 0;
-    iterate_directory(dirname, is_directory_callback);
+    iterate_directory(dirname, is_directory_callback, NULL);
 
     grub_free(copy);
     return is_directory_result;
