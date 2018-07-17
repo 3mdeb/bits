@@ -119,29 +119,24 @@ fixup-grub-i386-pc: build-grub-i386-pc
 	$(Q)cat '$(target)/boot/grub/i386-pc/lnxboot.img' '$(target)/boot/grub/core.img' > '$(target)/boot/grub/lnxcore.img'
 	$(Q)rm '$(target)/boot/grub/core.img'
 
-dist: fixup-grub-i386-pc build-grub-i386-efi build-grub-x86_64-efi
+build-all-grub: fixup-grub-i386-pc build-grub-i386-efi build-grub-x86_64-efi
 
 install-syslinux: setup
 	$(Q)cp -a '$(BITS)/syslinux' '$(target)/boot/'
-dist: install-syslinux
 
 install-doc: setup
 	$(Q)cp -a '$(BITS)/Documentation' '$(target)/boot/'
-dist: install-doc
 
 install-grub-cfg: setup
 	$(Q)cp -a '$(BITS)/cfg' '$(target)/boot/'
-dist: install-grub-cfg
 
 # Add a 512k preallocated file, full of newlines, to hold BITS logs.
 install-log: setup
 	$(Q)yes '' | head -c 524288 > '$(target)/boot/bits-log.txt'
-dist: install-log
 
 install-bitsversion: setup
 	$(Q)echo 'buildid = "$(buildid)"' >'$(target)/boot/python/bitsversion.py'
 	$(Q)echo 'buildnum = "$(buildnum)"' >>'$(target)/boot/python/bitsversion.py'
-dist: install-bitsversion
 
 install-bitsconfigdefaults: setup
 	$(Q)echo '# Built-in configuration defaults.' >'$(target)/boot/python/bitsconfigdefaults.py'
@@ -149,27 +144,21 @@ install-bitsconfigdefaults: setup
 	$(Q)echo 'defaults = """' >>'$(target)/boot/python/bitsconfigdefaults.py'
 	$(Q)cat '$(BITS)/bits-cfg.txt' >>'$(target)/boot/python/bitsconfigdefaults.py'
 	$(Q)echo '"""' >>'$(target)/boot/python/bitsconfigdefaults.py'
-dist: install-bitsconfigdefaults
 
 install-toplevel-cfg: setup
 	$(Q)echo 'source /boot/cfg/toplevel.cfg' >'$(target)/boot/grub/grub.cfg'
-dist: install-toplevel-cfg
 
 install-bits-cfg: setup
 	$(Q)cp '$(BITS)/bits-cfg.txt' '$(target)/boot/'
-dist: install-bits-cfg
 
 install-readme: setup
 	$(Q)sed 's/@@BUILDID@@/$(buildid)/g; s/@@BUILDNUM@@/$(buildnum)/g' '$(BITS)/README.txt' > '$(target)/boot/README.txt'
-dist: install-readme
 
 install-news: setup
 	$(Q)cp '$(BITS)/NEWS.txt' '$(target)/boot/NEWS.txt'
-dist: install-news
 
 install-src-bits: setup
 	$(Q)tar -czf '$(srcdir)/$(notdir $(bits-src-orig))-$(buildnum).tar.gz' --exclude=.git --exclude-from='$(BITS)/.gitignore' -C '$(bits-src-orig)/..' '$(notdir $(bits-src-orig))'
-dist: install-src-bits
 
 build-python-host: setup
 	$(Q)tar -cf - --exclude=.git -C $(BITS)/deps/python . | tar -xf - -C $(python-host-src)
@@ -279,24 +268,26 @@ endef
 bytecompile-pylib: install-pylib build-python-host
 	$(call bytecompile,$(pylibtmp))
 	$(Q)cd '$(pylibtmp)' && zip -qr '$(target)/boot/python/lib.zip' . -i '*.pyc'
-dist: bytecompile-pylib
 
 install-bits-python: setup
 	$(Q)cp -a '$(BITS)/python/.' '$(target)/boot/python/'
 
 bytecompile-bits-python: install-bits-python build-python-host
 	$(call bytecompile,$(target)/boot/python)
-dist: bytecompile-bits-python
 
 install-install: setup
 	$(Q)cp '$(BITS)/INSTALL.txt' '$(target)/'
-dist: install-install
 
 install-copying: setup
 	$(Q)cp '$(BITS)/COPYING' '$(target)/boot/'
-dist: install-copying
 
-dist:
+install-all: bytecompile-pylib bytecompile-bits-python \
+	install-bitsversion install-bitsconfigdefaults \
+	install-toplevel-cfg install-bits-cfg install-grub-cfg install-log \
+	install-doc install-copying install-install install-news install-readme \
+	install-syslinux install-src-bits
+
+dist: build-all-grub install-all
 ifneq ($(LOCAL),)
 	$(Q)cp -a '$(BITS)/local-files/.' '$(target)/'
 endif
