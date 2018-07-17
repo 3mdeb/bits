@@ -122,14 +122,14 @@ static grub_err_t do_microcode(int action, struct buffer_info buf_info)
     return WriteUpdatesToCpus(action, &buf_info, cpu);
 }
 
-static void iterate_directory(const char *dirname, int (*callback)(const char *filename, const struct grub_dirhook_info *info))
+static void iterate_directory(const char *dirname, int (*callback)(const char *filename, const struct grub_dirhook_info *info, void *hook_data))
 {
     char *device_name = grub_file_get_device_name(dirname);
     grub_device_t device = grub_device_open(device_name);
     if (device) {
         grub_fs_t fs = grub_fs_probe(device);
         if (fs)
-            fs->dir(device, dirname, callback);
+            fs->dir(device, dirname, callback, NULL);
         grub_device_close(device);
     }
     grub_free(device_name);
@@ -138,7 +138,7 @@ static void iterate_directory(const char *dirname, int (*callback)(const char *f
 static const char *is_directory_filename;
 static bool is_directory_result;
 
-static int is_directory_callback(const char *filename, const struct grub_dirhook_info *info)
+static int is_directory_callback(const char *filename, const struct grub_dirhook_info *info, void *data)
 {
     if ((info->case_insensitive ? grub_strcasecmp : grub_strcmp)(is_directory_filename, filename) == 0) {
         is_directory_result = !!info->dir;
@@ -191,7 +191,7 @@ static const char *accumulate_size_dirname;
 static U32 accumulate_size_result;
 static U32 accumulate_size_max;
 
-static int accumulate_size_callback(const char *filename, const struct grub_dirhook_info *info)
+static int accumulate_size_callback(const char *filename, const struct grub_dirhook_info *info, void *data)
 {
     if (!info->dir) {
         U32 file_size;
@@ -293,7 +293,7 @@ static void *parse_microcode_buf;
 static void *parse_microcode_filebuf;
 static U32 parse_microcode_result;
 
-static int parse_microcode_callback(const char *filename, const struct grub_dirhook_info *info)
+static int parse_microcode_callback(const char *filename, const struct grub_dirhook_info *info, void *data)
 {
     if (!info->dir) {
         char *full_filename = grub_xasprintf("%s/%s", parse_microcode_dirname, filename);

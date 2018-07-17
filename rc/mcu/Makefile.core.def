@@ -31,7 +31,7 @@ AutoGen definitions Makefile.tpl;
 module = {
         name = mcu;
         cppflags = '$(CONTRIB_CPPFLAGS)';
-        cflags = '$(CONTRIB_CFLAGS) -Wno-write-strings';
+        cflags = '$(CONTRIB_CFLAGS) -Wno-write-strings -Wno-unused-parameter';
         enable = i386_pc;
         enable = i386_coreboot;
         common = contrib/mcu/mcu.c;
