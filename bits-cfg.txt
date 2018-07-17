@@ -10,7 +10,7 @@
 # smbios: Dump all SMBIOS structures.
 #
 # Leave batch set to an empty string to disable batch mode.
-batch =
+batch = test
 
 # Uncomment the following to run all available batch operations
 #batch = test acpi smbios

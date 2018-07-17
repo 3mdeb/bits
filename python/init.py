@@ -228,6 +228,7 @@ def init():
         for batch_keyword in batch.split():
             print "\nRunning batch operation", batch_keyword
             try:
+		testsuite.set_verbose(3)
                 if batch_keyword == "test":
                     testsuite.run_all_tests()
                 with redirect.logonly():
