@@ -280,12 +280,11 @@ install-copying: prepare
 install-all: bytecompile-pylib bytecompile-bits-python \
 	install-bitsversion install-bitsconfigdefaults \
 	install-toplevel-cfg install-bits-cfg install-grub-cfg install-log \
-	install-doc install-copying install-install install-news install-readme \
-	install-syslinux install-src-bits
+	install-doc install-copying install-install install-news install-readme
 
 all: build-all-grub install-all
 
-dist: all
+dist: all install-syslinux install-src-bits
 ifneq ($(LOCAL),)
 	@echo 'Including local-files in the build; DO NOT DISTRIBUTE THIS BUILD.'
 	$(Q)cp -a '$(BITS)/local-files/.' '$(target)/'
