@@ -82,6 +82,7 @@ copygrub: prepare
 
 copydeps: prepare
 	$(Q)tar -cf - --exclude=.git --exclude=./grub -C $(BITS)/deps . | tar -xf - -C $(contrib-deps)
+	$(Q)patch -p1 -d $(contrib-deps)/python < isdir-hack.patch
 
 fixup-libffi: copydeps
 	$(Q)sed -e 's/#ifndef @TARGET@/#ifdef GRUB_TARGET_CPU_I386/' \
