@@ -26,10 +26,13 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+AutoGen definitions Makefile.tpl;
+
 module = {
         name = mcu;
         cppflags = '$(CONTRIB_CPPFLAGS)';
         cflags = '$(CONTRIB_CFLAGS) -Wno-write-strings';
         enable = i386_pc;
+        enable = i386_coreboot;
         common = contrib/mcu/mcu.c;
 };
