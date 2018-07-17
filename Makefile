@@ -64,7 +64,7 @@ setup-dirs:='$(workdir)' '$(target)' '$(target)/boot' '$(target)/boot/grub' '$(t
 
 cleanfiles='$(BITS)/bits-$(buildnum).iso' '$(BITS)/bits-$(buildnum).zip' '$(BITS)/bits-latest.iso' '$(BITS)/bits-latest.zip'
 
-all: dist
+default: all
 
 clean:
 	$(Q)rm -rf '$(workdir)'
@@ -287,7 +287,9 @@ install-all: bytecompile-pylib bytecompile-bits-python \
 	install-doc install-copying install-install install-news install-readme \
 	install-syslinux install-src-bits
 
-dist: build-all-grub install-all
+all: build-all-grub install-all
+
+dist: all
 ifneq ($(LOCAL),)
 	$(Q)cp -a '$(BITS)/local-files/.' '$(target)/'
 endif
