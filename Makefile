@@ -70,21 +70,17 @@ clean:
 	$(Q)rm -rf '$(workdir)'
 	$(Q)rm -f $(cleanfiles)
 
-# setup should always be the first target invoked
-setup:
-ifneq ($(LOCAL),)
-	@echo 'Including local-files in the build; DO NOT DISTRIBUTE THIS BUILD.'
-endif
-	$(Q)rm -rf '$(workdir)'
+# prepare should always be the first target invoked
+prepare:
 	$(Q)mkdir -p $(setup-dirs)
 
-copy-%: setup
+copy-%: prepare
 	$(Q)cp -a '$($*-src-orig)/.' '$($*-src)'
 
-copygrub: setup
+copygrub: prepare
 	$(Q)tar -cf - --exclude=.git -C $(BITS)/deps/grub . | tar -xf - -C $(grub-src)
 
-copydeps: setup
+copydeps: prepare
 	$(Q)tar -cf - --exclude=.git --exclude=./grub -C $(BITS)/deps . | tar -xf - -C $(contrib-deps)
 
 fixup-libffi: copydeps
@@ -121,46 +117,46 @@ fixup-grub-i386-pc: build-grub-i386-pc
 
 build-all-grub: fixup-grub-i386-pc build-grub-i386-efi build-grub-x86_64-efi
 
-install-syslinux: setup
+install-syslinux: prepare
 	$(Q)cp -a '$(BITS)/syslinux' '$(target)/boot/'
 
-install-doc: setup
+install-doc: prepare
 	$(Q)cp -a '$(BITS)/Documentation' '$(target)/boot/'
 
-install-grub-cfg: setup
+install-grub-cfg: prepare
 	$(Q)cp -a '$(BITS)/cfg' '$(target)/boot/'
 
 # Add a 512k preallocated file, full of newlines, to hold BITS logs.
-install-log: setup
+install-log: prepare
 	$(Q)yes '' | head -c 524288 > '$(target)/boot/bits-log.txt'
 
-install-bitsversion: setup
+install-bitsversion: prepare
 	$(Q)echo 'buildid = "$(buildid)"' >'$(target)/boot/python/bitsversion.py'
 	$(Q)echo 'buildnum = "$(buildnum)"' >>'$(target)/boot/python/bitsversion.py'
 
-install-bitsconfigdefaults: setup
+install-bitsconfigdefaults: prepare
 	$(Q)echo '# Built-in configuration defaults.' >'$(target)/boot/python/bitsconfigdefaults.py'
 	$(Q)echo '# Do not edit; edit /boot/bits-cfg.txt instead.' >>'$(target)/boot/python/bitsconfigdefaults.py'
 	$(Q)echo 'defaults = """' >>'$(target)/boot/python/bitsconfigdefaults.py'
 	$(Q)cat '$(BITS)/bits-cfg.txt' >>'$(target)/boot/python/bitsconfigdefaults.py'
 	$(Q)echo '"""' >>'$(target)/boot/python/bitsconfigdefaults.py'
 
-install-toplevel-cfg: setup
+install-toplevel-cfg: prepare
 	$(Q)echo 'source /boot/cfg/toplevel.cfg' >'$(target)/boot/grub/grub.cfg'
 
-install-bits-cfg: setup
+install-bits-cfg: prepare
 	$(Q)cp '$(BITS)/bits-cfg.txt' '$(target)/boot/'
 
-install-readme: setup
+install-readme: prepare
 	$(Q)sed 's/@@BUILDID@@/$(buildid)/g; s/@@BUILDNUM@@/$(buildnum)/g' '$(BITS)/README.txt' > '$(target)/boot/README.txt'
 
-install-news: setup
+install-news: prepare
 	$(Q)cp '$(BITS)/NEWS.txt' '$(target)/boot/NEWS.txt'
 
-install-src-bits: setup
+install-src-bits: prepare
 	$(Q)tar -czf '$(srcdir)/$(notdir $(bits-src-orig))-$(buildnum).tar.gz' --exclude=.git --exclude-from='$(BITS)/.gitignore' -C '$(bits-src-orig)/..' '$(notdir $(bits-src-orig))'
 
-build-python-host: setup
+build-python-host: prepare
 	$(Q)tar -cf - --exclude=.git -C $(BITS)/deps/python . | tar -xf - -C $(python-host-src)
 	$(Q)cd '$(python-host-src)' && ./configure
 	$(Q)cd '$(python-host-src)' && $(MAKE)
@@ -253,7 +249,7 @@ pylibs:=\
 	warnings.py \
 	weakref.py
 
-install-pylib: setup
+install-pylib: prepare
 	$(Q)mkdir -p '$(pylibtmp)'
 	$(Q)cd '$(pylibtmp)' && mkdir -p $(filter-out ./,$(dir $(pylibs)))
 	$(Q)cd '$(BITS)/deps/python/Lib' && cp --parents -a $(pylibs) '$(pylibtmp)'
@@ -269,16 +265,16 @@ bytecompile-pylib: install-pylib build-python-host
 	$(call bytecompile,$(pylibtmp))
 	$(Q)cd '$(pylibtmp)' && zip -qr '$(target)/boot/python/lib.zip' . -i '*.pyc'
 
-install-bits-python: setup
+install-bits-python: prepare
 	$(Q)cp -a '$(BITS)/python/.' '$(target)/boot/python/'
 
 bytecompile-bits-python: install-bits-python build-python-host
 	$(call bytecompile,$(target)/boot/python)
 
-install-install: setup
+install-install: prepare
 	$(Q)cp '$(BITS)/INSTALL.txt' '$(target)/'
 
-install-copying: setup
+install-copying: prepare
 	$(Q)cp '$(BITS)/COPYING' '$(target)/boot/'
 
 install-all: bytecompile-pylib bytecompile-bits-python \
@@ -291,6 +287,7 @@ all: build-all-grub install-all
 
 dist: all
 ifneq ($(LOCAL),)
+	@echo 'Including local-files in the build; DO NOT DISTRIBUTE THIS BUILD.'
 	$(Q)cp -a '$(BITS)/local-files/.' '$(target)/'
 endif
 	$(Q)rm -f '$(BITS)/bits-$(buildnum).iso' '$(BITS)/bits-$(buildnum).zip'
