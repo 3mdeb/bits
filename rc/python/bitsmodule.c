@@ -160,22 +160,17 @@ static PyObject *bits__getenv(PyObject *self, PyObject *args)
     return Py_BuildValue("s", value ? value : default_value);
 }
 
-static PyObject *getenvdict_result;
-
-static int getenvdict_callback(struct grub_env_var *var)
-{
-    const char *value = var->read_hook ? var->read_hook(var, var->value) : var->value;
-    PyDict_SetItem(getenvdict_result, PyString_FromString(var->name), PyString_FromString(value));
-    return 0;
-}
-
 static PyObject *bits__getenvdict(PyObject *self, PyObject *args)
 {
+    struct grub_env_var *env;
     PyObject *result;
-    getenvdict_result = PyDict_New();
-    grub_env_iterate(getenvdict_callback);
-    result = getenvdict_result;
-    getenvdict_result = NULL;
+    result = PyDict_New();
+
+    FOR_SORTED_ENV (env) {
+       const char *value = grub_env_get (env->name);
+       PyDict_SetItem(result, PyString_FromString(env->name), PyString_FromString(value));
+    }
+
     return result;
 }
 
