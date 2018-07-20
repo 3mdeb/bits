@@ -57,7 +57,7 @@ python-host-src:=$(workdir)/python-host
 
 export GRUB_CONTRIB:=$(grub-contrib-src)
 grub-prefix:=$(workdir)/grub-inst
-target:=$(workdir)/bits-$(buildnum)
+target:=$(workdir)/bits
 srcdir:=$(target)/boot/src
 
 setup-dirs:='$(workdir)' '$(target)' '$(target)/boot' '$(target)/boot/grub' '$(target)/boot/mcu' '$(target)/boot/mcu.first' '$(target)/boot/python' '$(srcdir)' '$(target)/efi/boot' '$(contrib-deps)' '$(python-host-src)'
