@@ -1,20 +1,16 @@
 [submodule "deps/acpica"]
 	path = deps/acpica
-	url = ../acpica
+	url = git@github.com:biosbits/acpica
 	fetchRecurseSubmodules = true
 [submodule "deps/fdlibm"]
 	path = deps/fdlibm
-	url = ../fdlibm
-	fetchRecurseSubmodules = true
-[submodule "deps/grub"]
-	path = deps/grub
-	url = ../grub
+	url = git@github.com:biosbits/fdlibm
 	fetchRecurseSubmodules = true
 [submodule "deps/libffi"]
 	path = deps/libffi
-	url = ../libffi
+	url = git@github.com:biosbits/libffi
 	fetchRecurseSubmodules = true
 [submodule "deps/python"]
 	path = deps/python
-	url = ../python
+	url = git@github.com:biosbits/python
 	fetchRecurseSubmodules = true
