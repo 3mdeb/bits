@@ -281,7 +281,10 @@ install-copying: prepare
 install-all: bytecompile-pylib bytecompile-bits-python \
 	install-bitsversion install-bitsconfigdefaults \
 	install-toplevel-cfg install-bits-cfg install-grub-cfg install-log \
-	install-doc install-copying install-install install-news install-readme
+	install-doc install-copying install-install install-news install-readme \
+	fixup-libffi copydeps
+
+bits_grub_env: fixup-libffi copydeps install-all
 
 all: build-all-grub install-all
 
