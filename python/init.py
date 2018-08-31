@@ -214,6 +214,8 @@ def init():
     with init_annotation("smbios"):
         smbios.log_smbios_info()
 
+
+
     if sys.platform == "BITS-EFI":
         with import_annotation("efi"):
             import efi
@@ -232,6 +234,7 @@ def init():
                 if batch_keyword == "test":
                     testsuite.run_all_tests()
                 if batch_keyword == "chipsec":
+                    import chipsec, chipsec_tools
                     import chipsec_main
                     chipsec_main.main()
                 with redirect.logonly():
