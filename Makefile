@@ -188,6 +188,8 @@ pylibs:=\
 	ctypes/_endian.py \
 	difflib.py \
 	dis.py \
+	distutils/__init__.py \
+	distutils/dir_util.py \
 	dummy_thread.py \
 	dummy_threading.py \
 	encodings \
@@ -201,6 +203,12 @@ pylibs:=\
 	hashlib.py \
 	heapq.py \
 	httplib.py \
+	importlib/__init__.py \
+	json/__init__.py \
+	json/decoder.py \
+	json/encoder.py \
+	json/scanner.py \
+	json/tool.py \
 	inspect.py \
 	keyword.py \
 	linecache.py \
@@ -213,6 +221,7 @@ pylibs:=\
 	pdb.py \
 	pickle.py \
 	pkgutil.py \
+	platform.py \
 	posixpath.py \
 	pprint.py \
 	profile.py \
@@ -234,6 +243,7 @@ pylibs:=\
 	string.py \
 	StringIO.py \
 	struct.py \
+	subprocess.py \
 	textwrap.py \
 	threading.py \
 	timeit.py \
@@ -248,7 +258,21 @@ pylibs:=\
 	UserDict.py \
 	uuid.py \
 	warnings.py \
-	weakref.py
+	weakref.py \
+	xml/__init__.py \
+	xml/etree/__init__.py \
+	xml/etree/ElementTree.py \
+	xml/etree/cElementTree.py \
+	xml/etree/ElementInclude.py \
+	xml/etree/ElementPath.py \
+	xml/dom/__init__.py \
+	xml/dom/domreg.py \
+	xml/dom/expatbuilder.py \
+	xml/dom/minicompat.py \
+	xml/dom/minidom.py \
+	xml/dom/NodeFilter.py \
+	xml/dom/pulldom.py \
+	xml/dom/xmlbuilder.py
 
 install-pylib: prepare
 	$(Q)mkdir -p '$(pylibtmp)'
