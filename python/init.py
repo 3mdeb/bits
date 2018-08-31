@@ -231,6 +231,9 @@ def init():
 		testsuite.set_verbose(3)
                 if batch_keyword == "test":
                     testsuite.run_all_tests()
+                if batch_keyword == "chipsec":
+                    import chipsec_main
+                    chipsec_main.main()
                 with redirect.logonly():
                     if batch_keyword == "acpi":
                         import acpi
