@@ -14,7 +14,7 @@ diff --git a/Python/import.c b/Python/import.c
 index e47ce63..460c9ac 100644
 --- a/Python/import.c
 +++ b/Python/import.c
-@@ -129,8 +129,13 @@ static int isdir(char *path) {
+@@ -129,8 +129,12 @@ static int isdir(char *path) {
  #else
  #ifdef HAVE_STAT
  static int isdir(char *path) {
@@ -22,8 +22,7 @@ index e47ce63..460c9ac 100644
      struct stat statbuf;
      return stat(path, &statbuf) == 0 && S_ISDIR(statbuf.st_mode);
 +#else
-+    return (strcmp("/boot/python", path) == 0) ||
-+		(strcmp("/boot/python/bits", path) == 0);
++    return (strstr(path, "/boot/python") != 0);
 +#endif
  }
  #else
