@@ -22,7 +22,7 @@ index e47ce63..460c9ac 100644
      struct stat statbuf;
      return stat(path, &statbuf) == 0 && S_ISDIR(statbuf.st_mode);
 +#else
-+    return (strstr(path, "/boot/python") != 0);
++    return (strstr(path, "/boot/python") == path);
 +#endif
  }
  #else
