@@ -221,7 +221,6 @@ pylibs:=\
 	pdb.py \
 	pickle.py \
 	pkgutil.py \
-	platform.py \
 	posixpath.py \
 	pprint.py \
 	profile.py \
