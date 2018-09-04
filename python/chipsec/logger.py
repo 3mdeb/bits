@@ -35,7 +35,7 @@ import platform
 import string
 import sys
 import os
-from time import localtime, strftime
+from time import localtime
 
 from chipsec.xmlout import xmlAux
 import traceback
@@ -194,7 +194,7 @@ class Logger:
         # Close current log file if it's opened
         self.disable()
         if not os.path.exists( LOG_PATH ): os.makedirs( LOG_PATH )
-        self.LOG_FILE_NAME = os.path.join( LOG_PATH, strftime( '%Y_%m_%d__%H%M%S', self.mytime ) + '.log')
+        self.LOG_FILE_NAME = os.path.join( LOG_PATH, 'default.log')
         # Open new log file and keep it opened
         try:
             self.logfile = open( self.LOG_FILE_NAME, 'a+' )
@@ -206,7 +206,7 @@ class Logger:
         """Sets the status log file for the output."""
         if not os.path.exists(LOG_PATH):
             os.makedirs(LOG_PATH)
-        self.LOG_STATUS_FILE_NAME =   os.path.join( LOG_PATH, strftime('%Y_%m_%d__%H%M%S', self.mytime ) + '_results.log')
+        self.LOG_STATUS_FILE_NAME =   os.path.join( LOG_PATH, 'status_results.log')
         self.LOG_TO_STATUS_FILE = True
 
     def close( self ):

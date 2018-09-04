@@ -1,6 +1,6 @@
 #CHIPSEC: Platform Security Assessment Framework
 #Copyright (c) 2010-2016, Intel Corporation
-# 
+#
 #This program is free software; you can redistribute it and/or
 #modify it under the terms of the GNU General Public License
 #as published by the Free Software Foundation; Version 2.
@@ -31,7 +31,7 @@ import json
 import pprint
 import binascii
 from random                     import getrandbits, randint
-from time                       import strftime, localtime
+from time                       import localtime
 from chipsec.module_common      import *
 from chipsec.defines            import *
 
@@ -78,7 +78,7 @@ class BaseModuleDebug(BaseModule):
           if a % w== 0:
               sys.stdout.write('\n[%s]  %08X: ' % (self.promt, a))
           elif a % w % 8 == 0:
-             sys.stdout.write('| ')          
+             sys.stdout.write('| ')
           sys.stdout.write('%02x ' % ord(c))
           a = a + 1
         sys.stdout.write('\n')
@@ -263,10 +263,10 @@ class session_logger(object):
         self.log2term  = True
         self.log2file  = True
         if self.log:
-#            logpath = 'logs/'
-#            logfile = '%s.log' % details
-            logpath = 'logs/%s/' % strftime("%Yww%W.%w", localtime())
-            logfile = '%s-%s.log' % (details, strftime("%H%M", localtime()))
+            logpath = 'logs/'
+            logfile = '%s.log' % details
+#            logpath = 'logs/%s/' % strftime("%Yww%W.%w", localtime())
+#            logfile = '%s-%s.log' % (details, strftime("%H%M", localtime()))
             try:
                 os.makedirs(logpath)
             except OSError:

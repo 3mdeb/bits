@@ -37,7 +37,7 @@ import platform
 import string
 import sys
 import os
-from time import localtime, strftime
+from time import localtime
 
 import chipsec.logger
 import chipsec.chipset
