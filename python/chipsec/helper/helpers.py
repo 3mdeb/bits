@@ -22,6 +22,7 @@
 import os, platform
 import chipsec.file
 
+from chipsec.helper.bits import *
 from chipsec.helper.efi import *
 from chipsec.helper.linux import *
 from chipsec.helper.osx import *
