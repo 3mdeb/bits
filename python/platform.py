@@ -383,6 +383,67 @@ _ver_output = re.compile(r'(?:([\w ]+) ([\w.]+) '
                          '.*'
                          '\[.* ([\d.]+)\])')
 
+# Examples of VER command output:
+#
+#   Windows 2000:  Microsoft Windows 2000 [Version 5.00.2195]
+#   Windows XP:    Microsoft Windows XP [Version 5.1.2600]
+#   Windows Vista: Microsoft Windows [Version 6.0.6002]
+#
+# Note that the "Version" string gets localized on different
+# Windows versions.
+
+def _syscmd_ver(system='', release='', version='',
+
+               supported_platforms=('win32','win16','dos','os2')):
+
+    """ Tries to figure out the OS version used and returns
+        a tuple (system,release,version).
+
+        It uses the "ver" shell command for this which is known
+        to exists on Windows, DOS and OS/2. XXX Others too ?
+
+        In case this fails, the given parameters are used as
+        defaults.
+
+    """
+    if sys.platform not in supported_platforms:
+        return system,release,version
+
+    # Try some common cmd strings
+    for cmd in ('ver','command /c ver','cmd /c ver'):
+        try:
+            pipe = popen(cmd)
+            info = pipe.read()
+            if pipe.close():
+                raise os.error,'command failed'
+            # XXX How can I suppress shell errors from being written
+            #     to stderr ?
+        except os.error,why:
+            #print 'Command %s failed: %s' % (cmd,why)
+            continue
+        except IOError,why:
+            #print 'Command %s failed: %s' % (cmd,why)
+            continue
+        else:
+            break
+    else:
+        return system,release,version
+
+    # Parse the output
+    info = string.strip(info)
+    m = _ver_output.match(info)
+    if m is not None:
+        system,release,version = m.groups()
+        # Strip trailing dots from version and release
+        if release[-1] == '.':
+            release = release[:-1]
+        if version[-1] == '.':
+            version = version[:-1]
+        # Normalize the version and build strings (eliminating additional
+        # zeros)
+        version = _norm_version(version)
+    return system,release,version
+
 def _win32_getvalue(key,name,default=''):
 
     """ Read a value for name from the registry key.
