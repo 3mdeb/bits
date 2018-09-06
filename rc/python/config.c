@@ -131,7 +131,7 @@ struct _inittab _PyImport_Inittab[] = {
     {"itertools", inititertools},
     {"math", initmath},
     {"operator", initoperator},
-	{"pyexpat", initpyexpat},
+    {"pyexpat", initpyexpat},
     {"strop", initstrop},
     {"unicodedata", initunicodedata},
     {"zipimport", initzipimport},
