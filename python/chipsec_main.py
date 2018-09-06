@@ -565,6 +565,9 @@ class ChipsecMain:
                 self.no_time = True
             else:
                 assert False, "unknown option"
+        logger().VERBOSE = True
+        logger().HAL     = True
+        logger().DEBUG   = True
         return (True, None)
 
     ##################################################################################
