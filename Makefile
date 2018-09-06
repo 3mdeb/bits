@@ -264,6 +264,8 @@ pylibs:=\
 	xml/etree/cElementTree.py \
 	xml/etree/ElementInclude.py \
 	xml/etree/ElementPath.py \
+	xml/parsers/__init__.py \
+	xml/parsers/expat.py \
 	xml/dom/__init__.py \
 	xml/dom/domreg.py \
 	xml/dom/expatbuilder.py \
