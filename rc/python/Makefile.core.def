@@ -98,6 +98,7 @@ module = {
         common = contrib-deps/python/Modules/expat/xmlparse.c;
         common = contrib-deps/python/Modules/expat/xmlrole.c;
         common = contrib-deps/python/Modules/expat/xmltok.c;
+        common = contrib-deps/python/Modules/pyexpat.c;
         common = contrib-deps/python/Objects/abstract.c;
         common = contrib-deps/python/Objects/boolobject.c;
         common = contrib-deps/python/Objects/bufferobject.c;

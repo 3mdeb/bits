@@ -97,6 +97,7 @@ extern void init_struct(void);
 extern void initunicodedata(void);
 extern void init_weakref(void);
 extern void initzipimport(void);
+extern void initpyexpat(void);
 
 struct _inittab _PyImport_Inittab[] = {
 
@@ -130,6 +131,7 @@ struct _inittab _PyImport_Inittab[] = {
     {"itertools", inititertools},
     {"math", initmath},
     {"operator", initoperator},
+	{"pyexpat", initpyexpat},
     {"strop", initstrop},
     {"unicodedata", initunicodedata},
     {"zipimport", initzipimport},
