@@ -36,6 +36,8 @@ static FILE *fd_table[OPEN_MAX] = { stdin, stdout, stderr };
 
 static int high_water_mark = 2;
 
+static unsigned random_seed = 42;
+
 /* Convert an integer file descriptor to a FILE *; on failure, sets errno and
  * returns NULL.  Only valid on file descriptors previously returned from
  * file_to_fd. */
@@ -472,6 +474,17 @@ void qsort(void *base_void, size_t nmemb, size_t size, int(*compar)(const void *
     qsort(base + (last + 1)*size, nmemb - (last + 1), size, compar);
 }
 
+int rand(void)
+{
+    unsigned bit;                    /* Must be 16bit to allow bit<<15 later in the code */
+    unsigned lfsr = random_seed;
+    /* taps: 16 15 13 4; feedback polynomial: x^16 + x^15 + x^13 + x^4 + 1 */
+    bit  = ((lfsr >> 0) ^ (lfsr >> 1) ^ (lfsr >> 3) ^ (lfsr >> 12) ) & 1;
+    lfsr =  (lfsr >> 1) | (bit << 31);
+
+    return 0;
+}
+
 void rewind(FILE *stream)
 {
     grub_errno = GRUB_ERR_NONE;
@@ -513,6 +526,12 @@ int sprintf(char *str, const char *format, ...)
     ret = grub_vsnprintf(str, GRUB_ULONG_MAX, format, args);
     va_end(args);
     return ret;
+}
+
+void srand(unsigned seed)
+{
+    random_seed = seed;
+    return;
 }
 
 int stat(const char *path, struct stat *buf)
@@ -566,6 +585,11 @@ char *strrchr(const char *s, int c)
 {
     grub_errno = GRUB_ERR_NONE;
     return grub_strrchr(s, c);
+}
+
+time_t time(time_t *tm)
+{
+    return grub_get_time_ms()*1000;
 }
 
 int ungetc(int c, FILE *stream)

@@ -39,6 +39,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <grub/misc.h>
 #include <grub/mm.h>
 #include <grub/term.h>
+#include <grub/time.h>
 #define GRUB_POSIX_BOOL_DEFINED 1
 #include <lib/posix_wrap/sys/types.h>
 #include <lib/posix_wrap/ctype.h>
@@ -164,6 +165,7 @@ time_t mktime(struct tm *tm);
 
 int printf(const char *format, ...);
 void qsort(void *base_void, size_t nmemb, size_t size, int(*compar)(const void *, const void *));
+int rand(void);
 void rewind(FILE *stream);
 void setbuf(FILE *stream, char *buf);
 
@@ -175,12 +177,14 @@ sighandler_t signal(int signum, sighandler_t handler);
 
 int snprintf(char *str, size_t size, const char *format, ...);
 int sprintf(char *str, const char *format, ...);
+void srand(unsigned seed);
 int stat(const char *path, struct stat *buf);
 char *strdup(const char *s);
 char *strerror(int errnum);
 int strncmp(const char *s1, const char *s2, size_t n);
 char *strpbrk(const char *s, const char *accept);
 char *strrchr(const char *s, int c);
+time_t time(time_t *tm);
 int ungetc(int c, FILE *stream);
 int unlink(const char *pathname);
 int vfprintf(FILE *stream, const char *format, va_list args);
