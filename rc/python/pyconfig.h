@@ -130,6 +130,10 @@ struct lconv {
 #define getc fgetc
 #define putc fputc
 
+#ifndef assert
+void assert(int cond);
+#endif
+
 void _assert(const char *filename, unsigned line, int condition, const char *condition_str);
 #undef assert
 #define assert(x) _assert(__FILE__, __LINE__, !!(x), #x)
