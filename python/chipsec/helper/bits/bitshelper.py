@@ -96,19 +96,9 @@ class BitsHelper(Helper):
 
     def write_phys_mem( self, phys_address_hi, phys_address_lo, length, buf ):
         logger().log( '[bits] write_phys_mem' )
-        raise NotImplementedError()
         if (buf != None):
             mem = bits.memory( (phys_address_hi << 32) | phys_address_lo, length )
             mem = buf
-
-    def _write_phys_mem( self, phys_address, length, buf ):
-        raise NotImplementedError()
-        # temp hack
-        if 4 == length:
-            dword_value = struct.unpack( 'I', buf )[0]
-            edk2.writemem_dword( phys_address, dword_value )
-        else:
-            edk2.writemem( phys_address, buf, length )
 
     def alloc_phys_mem( self, length, max_pa ):
         raise NotImplementedError()
@@ -200,15 +190,15 @@ class BitsHelper(Helper):
     #
 
     def read_msr( self, cpu_thread_id, msr_addr ):
-        return bits.rdmsr( cpu_thread_id, msr_addr ) #TODO: check it
-        #(eax, edx) = edk2.rdmsr( msr_addr )
-        #eax = eax % 2**32
-        #edx = edx % 2**32
-        #return ( eax, edx )
+        r = bits.rdmsr( cpu_thread_id, msr_addr ) #TODO: check it
+        if r is None:
+            return (0xdeadbeef, 0xdeadbeef)
+        eax = r & 0xffffffff
+        edx = r >> 32
+        return ( eax, edx )
 
     def write_msr( self, cpu_thread_id, msr_addr, eax, edx ):
-        return bits.wrmsr( cpu_thread_id, msr_addr, ( edx << 32 ) | eax )
-        #edk2.wrmsr( msr_addr, eax, edx )
+        bits.wrmsr( cpu_thread_id, msr_addr, ( edx << 32 ) | eax )
 
     def read_cr(self, cpu_thread_id, cr_number):
         return 0
