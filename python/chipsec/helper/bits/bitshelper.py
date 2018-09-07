@@ -190,9 +190,10 @@ class BitsHelper(Helper):
     #
 
     def read_msr( self, cpu_thread_id, msr_addr ):
-        r = bits.rdmsr( cpu_thread_id, msr_addr ) #TODO: check it
+        r = bits.rdmsr( cpu_thread_id, msr_addr )
         if r is None:
-            return (0xdeadbeef, 0xdeadbeef)
+            logger().error("[bits] invalid register address: 0x%x" % msr_addr)
+            return (0, 0)
         eax = r & 0xffffffff
         edx = r >> 32
         return ( eax, edx )
