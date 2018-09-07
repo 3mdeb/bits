@@ -91,13 +91,6 @@ __attribute__((noreturn)) void abort(void)
     grub_fatal("Internal error: Python called abort()\n");
 }
 
-/* FIXME: dirty workaround for pyexpat */
-#undef assert
-void assert(int cond)
-{
-    _assert("", 0, cond, "");
-}
-
 void _assert(const char *filename, unsigned line, int condition, const char *condition_str)
 {
     if (!condition)
